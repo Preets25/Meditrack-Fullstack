@@ -2,22 +2,27 @@ import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import { getPostLoginPath } from '../lib/authRedirect';
-import { LogIn } from 'lucide-react';
+import { Pill } from 'lucide-react';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
+    setLoading(true);
     try {
       const user = await login(email, password);
       navigate(getPostLoginPath(user?.role));
     } catch (err) {
-      setError('Invalid email or password');
+      setError(err.response?.data?.message || 'Invalid email or password');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -26,7 +31,7 @@ const Login = () => {
       <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
         <div className="flex flex-col items-center mb-8">
           <div className="p-3 bg-blue-600 rounded-xl mb-4">
-            <LogIn className="text-white w-8 h-8" />
+            <Pill className="text-white w-8 h-8" />
           </div>
           <h1 className="text-2xl font-bold text-slate-900">Welcome Back</h1>
           <p className="text-slate-500 text-sm">Sign in to manage your health</p>
@@ -65,9 +70,15 @@ const Login = () => {
 
           <button
             type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition duration-200 shadow-lg shadow-blue-100"
+            disabled={loading}
+            className={`w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition duration-200 shadow-lg shadow-blue-100 flex justify-center items-center gap-2 ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
           >
-            Sign In
+            {loading ? (
+              <>
+                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                Signing In...
+              </>
+            ) : 'Sign In'}
           </button>
         </form>
 
