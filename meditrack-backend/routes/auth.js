@@ -95,19 +95,16 @@ router.get('/test-protected', protect, (req, res) => {
 // @route   POST /api/auth/forgot-password
 router.post('/forgot-password', async (req, res, next) => {
     try {
-        if (!isRedisReady()) {
-            return res.status(503).json({
-                success: false,
-                message: 'Password reset is unavailable: Redis is not connected. Check REDIS_URL or run npm run redis:test.'
-            });
-        }
         const { email } = req.body;
         const user = await User.findOne({ email });
         if (!user) return res.status(404).json({ message: "User not found" });
 
         const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
-        await redisClient.setEx(`otp:${email}`, 600, otp);
+        // Save OTP to user document (Expires in 10 minutes)
+        user.resetOtp = otp;
+        user.resetOtpExpire = Date.now() + 10 * 60 * 1000;
+        await user.save();
 
         // Send Email
         await transporter.sendMail({
@@ -126,24 +123,20 @@ router.post('/forgot-password', async (req, res, next) => {
 // @route   POST /api/auth/reset-password
 router.post('/reset-password', async (req, res, next) => {
     try {
-        if (!isRedisReady()) {
-            return res.status(503).json({
-                success: false,
-                message: 'Password reset is unavailable: Redis is not connected.'
-            });
-        }
         const { email, otp, newPassword } = req.body;
-        const storedOtp = await redisClient.get(`otp:${email}`);
-
-        if (!storedOtp || storedOtp !== otp) {
+        
+        const user = await User.findOne({ email });
+        
+        if (!user || user.resetOtp !== otp || user.resetOtpExpire < Date.now()) {
             return res.status(400).json({ message: "Invalid or expired OTP" });
         }
 
-        const user = await User.findOne({ email });
+        // Update password and clear OTP
         user.password = newPassword;
+        user.resetOtp = undefined;
+        user.resetOtpExpire = undefined;
         await user.save();
 
-        await redisClient.del(`otp:${email}`); // Delete OTP after use
         res.json({ success: true, message: "Password updated successfully" });
     } catch (err) {
         next(err);

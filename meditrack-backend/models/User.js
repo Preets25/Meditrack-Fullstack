@@ -10,7 +10,9 @@ const UserSchema = new mongoose.Schema({
         enum: ['patient', 'shop_owner', 'admin'], 
         default: 'patient' 
     },
-    fcmToken: { type: String, default: "" } // For future mobile notifications
+    fcmToken: { type: String, default: "" }, // For future mobile notifications
+    resetOtp: { type: String },
+    resetOtpExpire: { type: Date }
 }, { timestamps: true });
 
 // This encrypts the password automatically before saving to DB
