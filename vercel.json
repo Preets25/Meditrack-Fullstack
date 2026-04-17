@@ -2,6 +2,7 @@
   "rewrites": [
     { "source": "/login", "destination": "/meditrack-frontend/index.html" },
     { "source": "/register", "destination": "/meditrack-frontend/index.html" },
+    { "source": "/forgot-password", "destination": "/meditrack-frontend/index.html" },
     { "source": "/dashboard/(.*)", "destination": "/meditrack-frontend/index.html" },
     { "source": "/(.*)", "destination": "/meditrack-frontend/index.html" }
   ]
