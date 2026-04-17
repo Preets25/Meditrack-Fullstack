@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // In Expo, process.env isn't standard unless env variables are configured.
 // For local testing, use your machine's local IP address instead of localhost.
-const BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'http://10.0.57.122:5000/api'; 
+const BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'https://meditrack-fullstack.onrender.com/api'; 
 
 const api = axios.create({
   baseURL: BASE_URL,

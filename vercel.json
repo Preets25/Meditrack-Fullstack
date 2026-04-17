@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    { "source": "/login", "destination": "/meditrack-frontend/index.html" },
+    { "source": "/register", "destination": "/meditrack-frontend/index.html" },
+    { "source": "/dashboard/(.*)", "destination": "/meditrack-frontend/index.html" },
+    { "source": "/(.*)", "destination": "/meditrack-frontend/index.html" }
+  ]
+}
