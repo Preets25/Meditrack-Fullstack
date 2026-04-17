@@ -12,7 +12,7 @@ const app = express();
 
 // 1. Global Middleware
 app.use(cors({
-    origin: ['http://localhost:3000', 'http://localhost:5173', 'http://localhost:5174', 'http://localhost:5175'], // Allow React Frontend
+    origin: process.env.FRONTEND_URL ? [process.env.FRONTEND_URL, ...['http://localhost:3000', 'http://localhost:5173', 'http://localhost:5174', 'http://localhost:5175']] : '*', 
     credentials: true
 }));
 app.use(express.json()); // Allow JSON body parsing
