@@ -1,6 +1,14 @@
 const { createClient } = require('redis');
 const nodemailer = require('nodemailer');
+const dns = require('dns');
 
+// Force Node.js to prefer IPv4 over IPv6 when resolving hosts like smtp.gmail.com.
+// This prevents the 'connect ENETUNREACH 2404:...' error on cloud platforms where IPv6 routing is incomplete.
+try {
+    dns.setDefaultResultOrder('ipv4first');
+} catch (e) {
+    console.log("DNS ipv4first not supported on this Node version. Ignored.");
+}
 /** Strip whitespace and wrapping quotes often accidentally added in .env files */
 function normalizeRedisUrl(url) {
     if (!url || typeof url !== 'string') return '';
