@@ -122,9 +122,67 @@ const ShopDetail = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            </form>
-          </div>
+      <div className="space-y-8">
+        {/* Reviews Section */}
+        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 md:p-8">
+          <h2 className="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
+            <MessageSquare className="text-indigo-500" /> Customer Reviews
+          </h2>
+          
+          {reviews?.length === 0 ? (
+            <div className="text-slate-500 text-center py-10 bg-slate-50 rounded-2xl border border-dashed border-slate-200">
+              <MessageSquare size={32} className="mx-auto text-slate-300 mb-2" />
+              <p className="font-medium">No reviews yet. Be the first to share your experience!</p>
+            </div>
+          ) : (
+            <div className="space-y-4">
+               {reviews?.map((rev, index) => (
+                  <div key={index} className="p-5 bg-slate-50 rounded-2xl border border-slate-100">
+                    <div className="flex justify-between items-center mb-2">
+                       <span className="font-bold text-slate-800">{rev.userName || 'Verified User'}</span>
+                       <span className="flex items-center text-amber-500 text-sm font-bold bg-white px-2 py-1 rounded-lg border border-slate-100 shadow-sm">
+                         <Star size={14} fill="currentColor" className="mr-1"/> {rev.rating}/5
+                       </span>
+                    </div>
+                    <p className="text-slate-600 text-sm leading-relaxed">{rev.comment}</p>
+                  </div>
+               ))}
+            </div>
+          )}
+
+          {/* Write Review */}
+          <form onSubmit={handleReviewSubmit} className="mt-10 border-t border-slate-100 pt-8">
+            <h3 className="font-bold text-slate-800 mb-6 flex items-center gap-2 text-lg">
+              <PlusCircle size={20} className="text-indigo-500"/> Write a Review
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+              <div className="md:col-span-1">
+                 <label className="block text-sm font-bold text-slate-700 mb-2">Rating</label>
+                 <select 
+                   value={rating} 
+                   onChange={(e) => setRating(Number(e.target.value))}
+                   className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 transition-all font-semibold"
+                 >
+                   {[5,4,3,2,1].map(num => <option key={num} value={num}>{num} Stars</option>)}
+                 </select>
+              </div>
+              <div className="md:col-span-3">
+                 <label className="block text-sm font-bold text-slate-700 mb-2">Comment</label>
+                 <textarea 
+                   required
+                   value={comment}
+                   onChange={e => setComment(e.target.value)}
+                   className="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 h-28 transition-all"
+                   placeholder="How was your experience with this pharmacy?"
+                 />
+              </div>
+            </div>
+            <div className="flex justify-end">
+              <button type="submit" className="px-8 py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition shadow-lg shadow-indigo-100">
+                Submit Review
+              </button>
+            </div>
+          </form>
         </div>
       </div>
 
