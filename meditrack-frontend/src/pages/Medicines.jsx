@@ -232,112 +232,108 @@ const Medicines = () => {
 
       {/* Add / Edit Modal */}
       {showModal && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(15,23,42,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0.75rem', zIndex: 100, backdropFilter: 'blur(4px)' }}>
-          <div style={{ background: 'white', borderRadius: '1.25rem', padding: '1.5rem', maxWidth: 460, width: '100%', maxHeight: '95vh', overflowY: 'auto', boxShadow: '0 25px 50px rgba(0,0,0,0.25)', position: 'relative' }}>
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(15,23,42,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0.5rem', zIndex: 100, backdropFilter: 'blur(4px)' }}>
+          <div style={{ background: 'white', borderRadius: '1rem', padding: '1rem 1.25rem', maxWidth: 440, width: '100%', maxHeight: '98vh', overflowY: 'auto', boxShadow: '0 25px 50px rgba(0,0,0,0.25)', position: 'relative' }}>
             {/* Modal header */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '1rem', paddingBottom: '0.75rem', borderBottom: '1.5px solid #f1f5f9' }}>
-              <div style={{ width: 36, height: 36, background: '#eef2ff', borderRadius: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Pill size={18} style={{ color: '#4f46e5' }} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem', paddingBottom: '0.5rem', borderBottom: '1.5px solid #f1f5f9' }}>
+              <div style={{ width: 32, height: 32, background: '#eef2ff', borderRadius: '0.4rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Pill size={16} style={{ color: '#4f46e5' }} />
               </div>
               <div>
-                <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '1.15rem', fontWeight: 800, color: '#0f172a' }}>
-                  {editMed ? 'Edit Medicine' : 'Add New Medicine'}
+                <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '1.1rem', fontWeight: 800, color: '#0f172a', margin: 0 }}>
+                  {editMed ? 'Edit Medicine' : 'Add New'}
                 </h2>
-                <p style={{ fontSize: '0.75rem', color: '#94a3b8' }}>{editMed ? `Editing: ${editMed.name}` : 'Fill in medication details'}</p>
               </div>
             </div>
 
-            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
               {/* Name & Dosage */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.6rem' }}>
                 <div>
-                  <label style={{ fontSize: '0.7rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.08em', display: 'block', marginBottom: '0.4rem' }}>Medicine Name *</label>
-                  <input required className="input-premium" placeholder="e.g. Paracetamol" value={form.name}
+                  <label style={{ fontSize: '0.6rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.06em', display: 'block', marginBottom: '0.2rem' }}>Name *</label>
+                  <input required className="input-premium" style={{ padding: '0.4rem 0.75rem', fontSize: '0.85rem' }} placeholder="e.g. Paracetamol" value={form.name}
                     onChange={e => setForm(f => ({ ...f, name: e.target.value }))} />
                 </div>
                 <div>
-                  <label style={{ fontSize: '0.7rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.08em', display: 'block', marginBottom: '0.4rem' }}>Dosage *</label>
-                  <input required className="input-premium" placeholder="e.g. 500mg" value={form.dosage}
+                  <label style={{ fontSize: '0.6rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.06em', display: 'block', marginBottom: '0.2rem' }}>Dosage *</label>
+                  <input required className="input-premium" style={{ padding: '0.4rem 0.75rem', fontSize: '0.85rem' }} placeholder="e.g. 500mg" value={form.dosage}
                     onChange={e => setForm(f => ({ ...f, dosage: e.target.value }))} />
                 </div>
               </div>
 
               {/* Slots */}
               <div>
-                <label style={{ fontSize: '0.7rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.08em', display: 'block', marginBottom: '0.5rem' }}>Frequency</label>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.5rem' }}>
+                <label style={{ fontSize: '0.6rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.06em', display: 'block', marginBottom: '0.3rem' }}>Frequency</label>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.4rem' }}>
                   {SLOTS.map(s => (
                     <button key={s.label} type="button" onClick={() => toggleSlot(s.label)}
-                      style={{ padding: '0.5rem 0.25rem', borderRadius: '0.75rem', border: form.slots.includes(s.label) ? '2px solid #4f46e5' : '1.5px solid #e8eaf6', background: form.slots.includes(s.label) ? '#4f46e5' : 'white', color: form.slots.includes(s.label) ? 'white' : '#64748b', fontWeight: 700, fontSize: '0.75rem', cursor: 'pointer', textAlign: 'center', transition: 'all 0.15s' }}>
-                      {s.label}<br /><span style={{ fontSize: '0.6rem', opacity: 0.8 }}>{s.time}</span>
+                      style={{ padding: '0.4rem 0.2rem', borderRadius: '0.6rem', border: form.slots.includes(s.label) ? '2px solid #4f46e5' : '1.5px solid #e8eaf6', background: form.slots.includes(s.label) ? '#4f46e5' : 'white', color: form.slots.includes(s.label) ? 'white' : '#64748b', fontWeight: 700, fontSize: '0.7rem', cursor: 'pointer', textAlign: 'center', transition: 'all 0.1s' }}>
+                      {s.label}<br /><span style={{ fontSize: '0.55rem', opacity: 0.8 }}>{s.time}</span>
                     </button>
                   ))}
                 </div>
               </div>
 
               {/* Custom time / Start date */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.6rem' }}>
                 <div>
-                  <label style={{ fontSize: '0.7rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.08em', display: 'block', marginBottom: '0.4rem' }}>Custom Reminder Time</label>
-                  <input type="time" className="input-premium" value={form.time}
+                  <label style={{ fontSize: '0.6rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.06em', display: 'block', marginBottom: '0.2rem' }}>Reminder Time</label>
+                  <input type="time" className="input-premium" style={{ padding: '0.4rem 0.75rem', fontSize: '0.85rem' }} value={form.time}
                     onChange={e => setForm(f => ({ ...f, time: e.target.value }))} />
                 </div>
                 <div>
-                  <label style={{ fontSize: '0.7rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.08em', display: 'block', marginBottom: '0.4rem' }}>Start Date *</label>
-                  <input type="date" required className="input-premium" value={form.startDate}
+                  <label style={{ fontSize: '0.6rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.06em', display: 'block', marginBottom: '0.2rem' }}>Start Date *</label>
+                  <input type="date" required className="input-premium" style={{ padding: '0.4rem 0.75rem', fontSize: '0.85rem' }} value={form.startDate}
                     onChange={e => setForm(f => ({ ...f, startDate: e.target.value }))} />
                 </div>
               </div>
 
               {/* Stock & Alert Level */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.6rem' }}>
                 <div>
-                  <label style={{ fontSize: '0.7rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.08em', display: 'block', marginBottom: '0.4rem' }}>Current Stock *</label>
-                  <input type="number" required min="0" className="input-premium" placeholder="e.g. 30" value={form.stock}
+                  <label style={{ fontSize: '0.6rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.06em', display: 'block', marginBottom: '0.2rem' }}>Stock *</label>
+                  <input type="number" required min="0" className="input-premium" style={{ padding: '0.4rem 0.75rem', fontSize: '0.85rem' }} placeholder="e.g. 30" value={form.stock}
                     onChange={e => setForm(f => ({ ...f, stock: e.target.value }))} />
                 </div>
                 <div>
-                  <label style={{ fontSize: '0.7rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.08em', display: 'block', marginBottom: '0.4rem' }}>Low Stock Alert At</label>
-                  <input type="number" min="1" className="input-premium" placeholder="e.g. 10" value={form.stockAlertLevel}
+                  <label style={{ fontSize: '0.6rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.06em', display: 'block', marginBottom: '0.2rem' }}>Alert At</label>
+                  <input type="number" min="1" className="input-premium" style={{ padding: '0.4rem 0.75rem', fontSize: '0.85rem' }} placeholder="e.g. 10" value={form.stockAlertLevel}
                     onChange={e => setForm(f => ({ ...f, stockAlertLevel: e.target.value }))} />
                 </div>
               </div>
 
               {/* Email reminder */}
               <div>
-                <label style={{ fontSize: '0.65rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.08em', display: 'block', marginBottom: '0.3rem' }}>📧 Email for Reminders (optional)</label>
-                <input type="email" className="input-premium" style={{ padding: '0.5rem 0.75rem' }} placeholder="your@gmail.com" value={form.reminderEmail}
+                <label style={{ fontSize: '0.6rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.06em', display: 'block', marginBottom: '0.2rem' }}>📧 Reminder Email</label>
+                <input type="email" className="input-premium" style={{ padding: '0.4rem 0.75rem', fontSize: '0.85rem' }} placeholder="your@gmail.com" value={form.reminderEmail}
                   onChange={e => setForm(f => ({ ...f, reminderEmail: e.target.value }))} />
               </div>
 
               {/* Monthly toggle */}
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.6rem 0.85rem', background: '#f8faff', borderRadius: '0.75rem', border: '1.5px solid #e8eaf6' }}>
-                <div>
-                  <p style={{ fontWeight: 700, color: '#0f172a', fontSize: '0.8rem' }}>Monthly Treatment</p>
-                  <p style={{ fontSize: '0.65rem', color: '#94a3b8' }}>Auto-track for 30 days</p>
-                </div>
-                <input type="checkbox" className="w-3.5 h-3.5 accent-indigo-600 cursor-pointer" checked={form.isMonthly}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.5rem 0.75rem', background: '#f8faff', borderRadius: '0.6rem', border: '1.5px solid #e8eaf6' }}>
+                <p style={{ fontWeight: 700, color: '#0f172a', fontSize: '0.75rem' }}>Monthly Treatment</p>
+                <input type="checkbox" className="w-3 h-3 accent-indigo-600 cursor-pointer" checked={form.isMonthly}
                   onChange={e => setForm(f => ({ ...f, isMonthly: e.target.checked }))} />
               </div>
 
               {/* Prescription upload */}
               <div>
-                <label style={{ fontSize: '0.7rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.08em', display: 'flex', alignItems: 'center', gap: '4px', marginBottom: '0.4rem' }}>
-                  <Upload size={13} /> Prescription (optional)
+                <label style={{ fontSize: '0.6rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.06em', display: 'flex', alignItems: 'center', gap: '4px', marginBottom: '0.2rem' }}>
+                  <Upload size={12} /> Prescription
                 </label>
                 <input type="file" accept="image/*,.pdf"
-                  className="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer"
+                  className="w-full text-xs text-slate-500 file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer"
                   onChange={e => setForm(f => ({ ...f, prescriptionFile: e.target.files[0] }))} />
               </div>
 
               {/* Submit */}
-              <div style={{ display: 'flex', gap: '0.6rem', marginTop: '0.25rem' }}>
+              <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.2rem' }}>
                 <button type="button" onClick={() => { setShowModal(false); setEditMed(null); }}
-                  style={{ flex: 1, padding: '0.65rem', borderRadius: '0.75rem', border: '1.5px solid #e8eaf6', background: 'white', color: '#64748b', fontWeight: 700, fontSize: '0.85rem', cursor: 'pointer' }}>
+                  style={{ flex: 1, padding: '0.5rem', borderRadius: '0.6rem', border: '1.5px solid #e8eaf6', background: 'white', color: '#64748b', fontWeight: 700, fontSize: '0.8rem', cursor: 'pointer' }}>
                   Cancel
                 </button>
-                <button type="submit" disabled={isUploading} className="btn-premium" style={{ flex: 2, padding: '0.65rem' }}>
-                  {isUploading ? 'Uploading…' : editMed ? '✅ Update' : '💊 Save'}
+                <button type="submit" disabled={isUploading} className="btn-premium" style={{ flex: 2, padding: '0.5rem', fontSize: '0.85rem' }}>
+                  {isUploading ? 'Uploading…' : editMed ? 'Update' : 'Save'}
                 </button>
               </div>
             </form>
