@@ -24,10 +24,7 @@ const Layout = () => {
     { name: 'Medicines', path: '/medicines', icon: <Pill size={19} /> },
     { name: 'Shops', path: '/shops', icon: <Store size={19} /> },
     ...(user?.role === 'patient'
-      ? [
-          { name: 'My Orders', path: '/orders', icon: <ShoppingCart size={19} /> },
-          { name: 'Doctor Schedule', path: '/doctor-schedule', icon: <Stethoscope size={19} /> }
-        ]
+      ? [{ name: 'My Orders', path: '/orders', icon: <ShoppingCart size={19} /> }]
       : []),
     ...(user?.role === 'shop_owner' || user?.role === 'admin'
       ? [
@@ -173,10 +170,7 @@ const Layout = () => {
               { path: '/medicines',   icon: Pill,            label: 'Medicines' },
               { path: '/shops',       icon: Store,           label: 'Shops' },
               ...(user?.role === 'patient'
-                ? [
-                    { path: '/orders', icon: ShoppingCart, label: 'Orders' },
-                    { path: '/doctor-schedule', icon: Stethoscope, label: 'Doctors' }
-                  ]
+                ? [{ path: '/orders', icon: ShoppingCart, label: 'Orders' }]
                 : user?.role === 'shop_owner'
                 ? [{ path: '/inventory', icon: Package, label: 'Inventory' }]
                 : []
