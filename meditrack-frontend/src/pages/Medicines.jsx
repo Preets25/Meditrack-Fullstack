@@ -233,7 +233,7 @@ const Medicines = () => {
       {/* Add / Edit Modal */}
       {showModal && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(15,23,42,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0.5rem', zIndex: 100, backdropFilter: 'blur(4px)' }}>
-          <div style={{ background: 'white', borderRadius: '1rem', padding: '1rem 1.25rem', maxWidth: 440, width: '100%', maxHeight: '98vh', overflowY: 'auto', boxShadow: '0 25px 50px rgba(0,0,0,0.25)', position: 'relative' }}>
+          <div style={{ background: 'white', borderRadius: '1.25rem', padding: '1.5rem 1.75rem', maxWidth: 520, width: '100%', maxHeight: '95vh', overflowY: 'auto', boxShadow: '0 25px 50px rgba(0,0,0,0.3)', position: 'relative' }}>
             {/* Modal header */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem', paddingBottom: '0.5rem', borderBottom: '1.5px solid #f1f5f9' }}>
               <div style={{ width: 32, height: 32, background: '#eef2ff', borderRadius: '0.4rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -250,12 +250,12 @@ const Medicines = () => {
               {/* Name & Dosage */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.6rem' }}>
                 <div>
-                  <label style={{ fontSize: '0.6rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.06em', display: 'block', marginBottom: '0.2rem' }}>Name *</label>
+                  <label style={{ fontSize: '0.7rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.06em', display: 'block', marginBottom: '0.35rem' }}>Name *</label>
                   <input required className="input-premium" style={{ padding: '0.4rem 0.75rem', fontSize: '0.85rem' }} placeholder="e.g. Paracetamol" value={form.name}
                     onChange={e => setForm(f => ({ ...f, name: e.target.value }))} />
                 </div>
                 <div>
-                  <label style={{ fontSize: '0.6rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.06em', display: 'block', marginBottom: '0.2rem' }}>Dosage *</label>
+                  <label style={{ fontSize: '0.7rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.06em', display: 'block', marginBottom: '0.35rem' }}>Dosage *</label>
                   <input required className="input-premium" style={{ padding: '0.4rem 0.75rem', fontSize: '0.85rem' }} placeholder="e.g. 500mg" value={form.dosage}
                     onChange={e => setForm(f => ({ ...f, dosage: e.target.value }))} />
                 </div>
@@ -263,7 +263,7 @@ const Medicines = () => {
 
               {/* Slots */}
               <div>
-                <label style={{ fontSize: '0.6rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.06em', display: 'block', marginBottom: '0.3rem' }}>Frequency</label>
+                <label style={{ fontSize: '0.7rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.06em', display: 'block', marginBottom: '0.45rem' }}>Frequency</label>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.4rem' }}>
                   {SLOTS.map(s => (
                     <button key={s.label} type="button" onClick={() => toggleSlot(s.label)}
@@ -277,7 +277,7 @@ const Medicines = () => {
               {/* Custom time / Start date */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.6rem' }}>
                 <div>
-                  <label style={{ fontSize: '0.6rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.06em', display: 'block', marginBottom: '0.2rem' }}>Reminder Time</label>
+                  <label style={{ fontSize: '0.7rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.06em', display: 'block', marginBottom: '0.35rem' }}>Reminder Time</label>
                   <input type="time" className="input-premium" style={{ padding: '0.4rem 0.75rem', fontSize: '0.85rem' }} value={form.time}
                     onChange={e => setForm(f => ({ ...f, time: e.target.value }))} />
                 </div>
