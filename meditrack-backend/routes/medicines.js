@@ -217,5 +217,76 @@ router.get('/stats/adherence', protect, async (req, res) => {
 });
 
 
+// STOCK ALERT EMAIL — POST /medicines/:id/stock-alert
+router.post('/:id/stock-alert', protect, async (req, res) => {
+    try {
+        const medicine = await Medicine.findById(req.params.id);
+        if (!medicine || medicine.userId.toString() !== req.user._id.toString()) {
+            return res.status(404).json({ message: 'Medicine not found' });
+        }
+        const to = medicine.reminderEmail || req.user.email;
+        if (!to) return res.status(400).json({ message: 'No email address configured for reminders.' });
 
-module.exports = router;
+        await transporter.sendMail({
+            from: `"Meditrack" <${process.env.EMAIL_USER}>`,
+            to,
+            subject: `⚠️ Low Stock Alert: ${medicine.name}`,
+            html: `
+              <div style="font-family:sans-serif;max-width:480px;margin:auto;padding:24px;border-radius:12px;border:1px solid #e8eaf6">
+                <h2 style="color:#4f46e5">⚠️ Low Stock Alert</h2>
+                <p>Your medicine <strong>${medicine.name}</strong> is running low.</p>
+                <table style="width:100%;border-collapse:collapse;margin:16px 0">
+                  <tr><td style="padding:8px;background:#f8faff;border-radius:6px"><strong>Medicine:</strong> ${medicine.name}</td></tr>
+                  <tr><td style="padding:8px"><strong>Dosage:</strong> ${medicine.dosage || '—'}</td></tr>
+                  <tr><td style="padding:8px;background:#fef2f2;color:#ef4444;border-radius:6px"><strong>Current Stock:</strong> ${medicine.currentStock ?? medicine.stock ?? 0} units remaining</td></tr>
+                  <tr><td style="padding:8px"><strong>Alert Threshold:</strong> ${medicine.stockAlertLevel || 10} units</td></tr>
+                </table>
+                <p style="color:#64748b;font-size:13px">Please reorder soon to avoid missing doses. You can request a refill directly from the <strong>Meditrack</strong> app.</p>
+                <p style="color:#94a3b8;font-size:12px;margin-top:24px">You received this because you set up stock alerts on Meditrack.</p>
+              </div>
+            `
+        });
+
+        res.json({ success: true, message: `Stock alert sent to ${to}` });
+    } catch (err) {
+        console.error('Stock alert email error:', err.message);
+        res.status(500).json({ message: 'Failed to send stock alert email. Check email credentials.' });
+    }
+});
+
+// CUSTOM TIME REMINDER EMAIL — POST /medicines/:id/reminder
+router.post('/:id/reminder', protect, async (req, res) => {
+    try {
+        const medicine = await Medicine.findById(req.params.id);
+        if (!medicine || medicine.userId.toString() !== req.user._id.toString()) {
+            return res.status(404).json({ message: 'Medicine not found' });
+        }
+        const to = medicine.reminderEmail || req.user.email;
+        if (!to) return res.status(400).json({ message: 'No email address configured.' });
+
+        const timeLabel = (medicine.slots?.join(', ')) || medicine.time || 'your scheduled time';
+        await transporter.sendMail({
+            from: `"Meditrack" <${process.env.EMAIL_USER}>`,
+            to,
+            subject: `💊 Medication Reminder: ${medicine.name}`,
+            html: `
+              <div style="font-family:sans-serif;max-width:480px;margin:auto;padding:24px;border-radius:12px;border:1px solid #e8eaf6">
+                <h2 style="color:#4f46e5">💊 Time to take your medicine</h2>
+                <p>This is a reminder to take <strong>${medicine.name}</strong>.</p>
+                <table style="width:100%;border-collapse:collapse;margin:16px 0">
+                  <tr><td style="padding:8px;background:#f8faff;border-radius:6px"><strong>Medicine:</strong> ${medicine.name}</td></tr>
+                  <tr><td style="padding:8px"><strong>Dosage:</strong> ${medicine.dosage || '—'}</td></tr>
+                  <tr><td style="padding:8px;background:#eef2ff;border-radius:6px"><strong>Scheduled:</strong> ${timeLabel}</td></tr>
+                </table>
+                <p style="color:#94a3b8;font-size:12px;margin-top:24px">Stay healthy! — Meditrack</p>
+              </div>
+            `
+        });
+        res.json({ success: true, message: `Reminder sent to ${to}` });
+    } catch (err) {
+        console.error('Reminder email error:', err.message);
+        res.status(500).json({ message: 'Failed to send reminder email.' });
+    }
+});
+
+module.exports = router;

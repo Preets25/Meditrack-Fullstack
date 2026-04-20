@@ -86,11 +86,25 @@ const isRedisReady = () => redisClient && redisClient.isOpen === true;
 const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
     port: 587,
-    secure: false, // Use STARTTLS
-    requireTLS: true,
+    secure: false,          // STARTTLS
     auth: {
         user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
+        pass: process.env.EMAIL_PASS,     // Must be a Gmail App Password (16 chars), NOT your real password
+    },
+    tls: {
+        rejectUnauthorized: false,        // Allows self-signed certs on some networks
+    }
+});
+
+// Verify on startup so we get a clear error message if credentials are wrong
+transporter.verify((error) => {
+    if (error) {
+        console.error('❌ Email transporter error:', error.message);
+        console.error('   → Make sure EMAIL_USER and EMAIL_PASS are set correctly in .env');
+        console.error('   → EMAIL_PASS must be a Gmail App Password, not your account password.');
+        console.error('   → Enable 2FA on Google → then generate App Password: https://myaccount.google.com/apppasswords');
+    } else {
+        console.log('✅ Email transporter ready:', process.env.EMAIL_USER);
     }
 });
 
