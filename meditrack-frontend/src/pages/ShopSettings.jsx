@@ -116,7 +116,6 @@ const ShopSettings = () => {
         const updated = res.data?.data;
         if (updated) {
           setShopId(updated._id);
-          setDoctors(updated.doctorSchedule || doctors);
         }
         showToast('Shop settings saved!');
       } else {
@@ -137,13 +136,6 @@ const ShopSettings = () => {
     setSaving(false);
   };
 
-  // ── doctor helpers ──
-  const toggleDay = (day) => {
-    setNewDoctor(d => ({
-      ...d,
-      days: d.days.includes(day) ? d.days.filter(x => x !== day) : [...d.days, day]
-    }));
-  };
 
   const reverseGeocode = async (lat, lng) => {
     try {
