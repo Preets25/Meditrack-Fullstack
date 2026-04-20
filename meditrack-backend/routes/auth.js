@@ -39,7 +39,7 @@ router.post('/register', [
         res.status(201).json({ 
             success: true, 
             token,
-            user: { _id: user._id, name: user.name, email: user.email, role: user.role }
+            user: { _id: user._id, name: user.name, username: user.username, email: user.email, role: user.role }
         });
     } catch (err) {
         if (err.code === 11000) {
@@ -83,7 +83,7 @@ router.post('/login', [
         res.status(200).json({ 
             success: true, 
             token, 
-            user: { _id: user._id, name: user.name, email: user.email, role: user.role }
+            user: { _id: user._id, name: user.name, username: user.username, email: user.email, role: user.role }
         });
     } catch (err) {
         next(err);

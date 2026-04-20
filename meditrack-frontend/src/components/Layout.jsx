@@ -39,12 +39,14 @@ const Layout = () => {
   ];
 
   const roleLabel = {
-    patient: 'Patient',
+    patient:    'Patient',
     shop_owner: 'Shop Owner',
-    admin: 'Administrator',
-  }[sessionUser?.role ?? user?.role] ?? (sessionUser?.role ?? user?.role);
+    admin:      'Administrator',
+  }[user?.role] ?? user?.role ?? '';
 
-  const initials = user?.name?.split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase() || '?';
+  // Initials from full name (e.g. "Priya Pillai" → "PP")
+  const initials = (user?.name || user?.username || '?')
+    .split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase() || '?';
 
   const SidebarContent = () => (
     <div className="flex flex-col h-full">
