@@ -52,16 +52,21 @@ const Login = () => {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-5">
+            {/* Username / Email */}
             <div className="space-y-2">
               <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest ml-1">
                 Username or Email
               </label>
-              <div className="relative">
-                <User size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+              <div style={{ position: 'relative' }}>
+                <User
+                  size={16}
+                  style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8', pointerEvents: 'none' }}
+                />
                 <input
                   type="text"
                   required
-                  className="input-premium pl-11"
+                  className="input-premium"
+                  style={{ paddingLeft: '2.75rem' }}
                   placeholder="e.g. john_doe or john@example.com"
                   value={identifier}
                   onChange={(e) => setIdentifier(e.target.value)}
@@ -69,6 +74,7 @@ const Login = () => {
               </div>
             </div>
 
+            {/* Password */}
             <div className="space-y-2">
               <div className="flex justify-between items-center ml-1">
                 <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest">Password</label>
@@ -76,11 +82,12 @@ const Login = () => {
                   Forgot Password?
                 </Link>
               </div>
-              <div className="relative">
+              <div style={{ position: 'relative' }}>
                 <input
                   type={showPassword ? 'text' : 'password'}
                   required
-                  className="input-premium pr-12"
+                  className="input-premium"
+                  style={{ paddingRight: '3rem' }}
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -88,7 +95,7 @@ const Login = () => {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+                  style={{ position: 'absolute', right: '1rem', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: '#94a3b8', display: 'flex', alignItems: 'center' }}
                 >
                   {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>

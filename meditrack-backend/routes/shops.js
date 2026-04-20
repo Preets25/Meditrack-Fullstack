@@ -1,9 +1,44 @@
 const express = require('express');
 const router = express.Router();
+const { body, validationResult } = require('express-validator');
 const Shop = require('../models/Shop');
 const Review = require('../models/Review');
 const Inventory = require('../models/Inventory');
 const { protect, authorize } = require('../Middleware/Auth');
+
+// ── Shared validation rules ───────────────────────────────────────────────────
+const shopValidationRules = [
+  body('name')
+    .trim()
+    .notEmpty().withMessage('Shop name is required.')
+    .isLength({ min: 3, max: 100 }).withMessage('Shop name must be between 3 and 100 characters.'),
+
+  body('address')
+    .trim()
+    .notEmpty().withMessage('Shop address is required.')
+    .isLength({ min: 5 }).withMessage('Please enter a full valid address (min 5 characters).'),
+
+  body('phone')
+    .optional({ checkFalsy: true })
+    .matches(/^[+\d][\d\s\-().]{6,19}$/).withMessage('Phone number format is invalid (e.g. +91 98765 43210).'),
+];
+
+// ── Helper: run validation and return errors ──────────────────────────────────
+const validateRequest = (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    // Return the first readable message for each field
+    const messages = errors.array().map(e => e.msg);
+    res.status(422).json({
+      success: false,
+      message: messages[0],          // primary message for toast / alert
+      errors: messages               // full list for displaying per-field if needed
+    });
+    return false;
+  }
+  return true;
+};
+
 
 // ─────────────────────────────────────────────────────────────────
 // 1. GET ALL SHOPS (Public)
@@ -55,10 +90,12 @@ router.get('/my', protect, authorize('shop_owner', 'admin'), async (req, res) =>
 
 // 3. REGISTER A SHOP (Any logged in user can register)
 // ─────────────────────────────────────────────────────────────────
-router.post('/', protect, async (req, res) => {
+router.post('/', protect, shopValidationRules, async (req, res) => {
+    if (!validateRequest(req, res)) return;   // ← stops here if validation failed
+
     try {
         const User = require('../models/User');
-        
+
         // Check if user already has a shop
         const existing = await Shop.findOne({ owner: req.user._id });
         if (existing) {
@@ -81,10 +118,13 @@ router.post('/', protect, async (req, res) => {
     }
 });
 
+
 // ─────────────────────────────────────────────────────────────────
 // 4. UPDATE SHOP (owner or admin)
 // ─────────────────────────────────────────────────────────────────
-router.put('/:id', protect, authorize('shop_owner', 'admin'), async (req, res) => {
+router.put('/:id', protect, authorize('shop_owner', 'admin'), shopValidationRules, async (req, res) => {
+    if (!validateRequest(req, res)) return;   // ← stops here if validation failed
+
     try {
         const shop = await Shop.findById(req.params.id);
         if (!shop) return res.status(404).json({ message: 'Shop not found' });
@@ -100,6 +140,7 @@ router.put('/:id', protect, authorize('shop_owner', 'admin'), async (req, res) =
         res.status(400).json({ message: err.message });
     }
 });
+
 
 // ─────────────────────────────────────────────────────────────────
 // 5. ADD A REVIEW TO A SHOP

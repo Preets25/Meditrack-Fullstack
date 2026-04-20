@@ -71,7 +71,7 @@ const Register = () => {
               <input
                 type={showPassword ? 'text' : 'password'}
                 required
-                className="input-premium pr-12"
+                className="input-premium !pr-12"
                 placeholder="••••••••"
                 onChange={(e) => setFormData({...formData, password: e.target.value})}
               />

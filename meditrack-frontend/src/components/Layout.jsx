@@ -50,12 +50,12 @@ const Layout = () => {
     <div className="flex flex-col h-full">
       {/* Brand */}
       <div className="px-6 py-6 border-b border-slate-100/80">
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-200 flex-shrink-0">
+        <div className="flex items-center gap-4" style={{ gap: '1rem' }}>
+          <div className="w-9 h-9 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-200 flex-shrink-0" style={{ marginRight: '0.25rem' }}>
             <Pill size={18} className="text-white" />
           </div>
-          <div>
-            <span className="text-[17px] font-bold text-slate-900" style={{ fontFamily: 'Outfit, sans-serif', letterSpacing: '-0.02em' }}>
+          <div className="min-w-0">
+            <span className="text-[17px] font-bold text-slate-900 block truncate" style={{ fontFamily: 'Outfit, sans-serif', letterSpacing: '-0.02em' }}>
               Meditrack
             </span>
             <span className="block text-[10px] text-indigo-500 font-bold uppercase tracking-widest leading-none">Pro</span>
@@ -88,13 +88,13 @@ const Layout = () => {
       {/* User & Logout */}
       <div className="px-3 py-4 border-t border-slate-100/80 space-y-1">
         {user && (
-          <div className="flex items-center gap-3 px-3 py-3 rounded-xl bg-slate-50 mb-2">
-            <div className="w-9 h-9 rounded-xl bg-indigo-600 flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 12px', borderRadius: '12px', background: '#f8fafc', marginBottom: '8px', overflow: 'hidden' }}>
+            <div style={{ width: 36, height: 36, borderRadius: '10px', background: '#4f46e5', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '13px', fontWeight: 700, flexShrink: 0 }}>
               {initials}
             </div>
-            <div className="min-w-0">
-              <p className="text-sm font-bold text-slate-800 truncate">{user.name}</p>
-              <p className="text-[11px] text-slate-500 font-medium">{roleLabel}</p>
+            <div style={{ minWidth: 0, flex: 1, overflow: 'hidden' }}>
+              <p style={{ fontSize: '13px', fontWeight: 700, color: '#1e293b', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} title={user.name}>{user.name}</p>
+              <p style={{ fontSize: '11px', color: '#64748b', fontWeight: 500, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{roleLabel}</p>
             </div>
           </div>
         )}

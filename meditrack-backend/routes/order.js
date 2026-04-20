@@ -117,4 +117,22 @@ router.put('/:id', protect, async (req, res) => {
     }
 });
 
+// ── Patient: Delete a cancelled order ────────────────────────────
+router.delete('/:id', protect, async (req, res) => {
+    try {
+        const order = await Order.findById(req.params.id);
+        if (!order) return res.status(404).json({ message: 'Order not found' });
+        if (order.patientId.toString() !== req.user.id) {
+            return res.status(403).json({ message: 'Not your order' });
+        }
+        if (order.status !== 'Cancelled') {
+            return res.status(400).json({ message: 'Only cancelled orders can be deleted' });
+        }
+        await order.deleteOne();
+        res.json({ success: true, message: 'Order deleted successfully' });
+    } catch (err) {
+        res.status(500).json({ success: false, message: err.message });
+    }
+});
+
 module.exports = router;
