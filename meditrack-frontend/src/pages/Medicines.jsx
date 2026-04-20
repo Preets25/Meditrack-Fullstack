@@ -232,22 +232,22 @@ const Medicines = () => {
 
       {/* Add / Edit Modal */}
       {showModal && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(15,23,42,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem', zIndex: 50, backdropFilter: 'blur(4px)' }}>
-          <div style={{ background: 'white', borderRadius: '1.5rem', padding: '2rem', maxWidth: 480, width: '100%', maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 25px 50px rgba(0,0,0,0.25)' }}>
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(15,23,42,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0.75rem', zIndex: 100, backdropFilter: 'blur(4px)' }}>
+          <div style={{ background: 'white', borderRadius: '1.25rem', padding: '1.5rem', maxWidth: 460, width: '100%', maxHeight: '95vh', overflowY: 'auto', boxShadow: '0 25px 50px rgba(0,0,0,0.25)', position: 'relative' }}>
             {/* Modal header */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.5rem', paddingBottom: '1rem', borderBottom: '1.5px solid #f1f5f9' }}>
-              <div style={{ width: 40, height: 40, background: '#eef2ff', borderRadius: '0.75rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Pill size={20} style={{ color: '#4f46e5' }} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '1rem', paddingBottom: '0.75rem', borderBottom: '1.5px solid #f1f5f9' }}>
+              <div style={{ width: 36, height: 36, background: '#eef2ff', borderRadius: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Pill size={18} style={{ color: '#4f46e5' }} />
               </div>
               <div>
-                <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '1.25rem', fontWeight: 800, color: '#0f172a' }}>
+                <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '1.15rem', fontWeight: 800, color: '#0f172a' }}>
                   {editMed ? 'Edit Medicine' : 'Add New Medicine'}
                 </h2>
-                <p style={{ fontSize: '0.8rem', color: '#94a3b8' }}>{editMed ? `Editing: ${editMed.name}` : 'Fill in medication details'}</p>
+                <p style={{ fontSize: '0.75rem', color: '#94a3b8' }}>{editMed ? `Editing: ${editMed.name}` : 'Fill in medication details'}</p>
               </div>
             </div>
 
-            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
               {/* Name & Dosage */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
                 <div>
@@ -305,19 +305,18 @@ const Medicines = () => {
 
               {/* Email reminder */}
               <div>
-                <label style={{ fontSize: '0.7rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.08em', display: 'block', marginBottom: '0.4rem' }}>📧 Email for Reminders (optional)</label>
-                <input type="email" className="input-premium" placeholder="your@gmail.com" value={form.reminderEmail}
+                <label style={{ fontSize: '0.65rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.08em', display: 'block', marginBottom: '0.3rem' }}>📧 Email for Reminders (optional)</label>
+                <input type="email" className="input-premium" style={{ padding: '0.5rem 0.75rem' }} placeholder="your@gmail.com" value={form.reminderEmail}
                   onChange={e => setForm(f => ({ ...f, reminderEmail: e.target.value }))} />
-                <p style={{ fontSize: '0.7rem', color: '#94a3b8', marginTop: '0.25rem' }}>Get email alerts when stock is low or medicine time is due.</p>
               </div>
 
               {/* Monthly toggle */}
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.875rem 1rem', background: '#f8faff', borderRadius: '0.875rem', border: '1.5px solid #e8eaf6' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.6rem 0.85rem', background: '#f8faff', borderRadius: '0.75rem', border: '1.5px solid #e8eaf6' }}>
                 <div>
-                  <p style={{ fontWeight: 700, color: '#0f172a', fontSize: '0.875rem' }}>Monthly Treatment</p>
-                  <p style={{ fontSize: '0.72rem', color: '#94a3b8' }}>Auto-track for 30 days</p>
+                  <p style={{ fontWeight: 700, color: '#0f172a', fontSize: '0.8rem' }}>Monthly Treatment</p>
+                  <p style={{ fontSize: '0.65rem', color: '#94a3b8' }}>Auto-track for 30 days</p>
                 </div>
-                <input type="checkbox" className="w-4 h-4 accent-indigo-600 cursor-pointer" checked={form.isMonthly}
+                <input type="checkbox" className="w-3.5 h-3.5 accent-indigo-600 cursor-pointer" checked={form.isMonthly}
                   onChange={e => setForm(f => ({ ...f, isMonthly: e.target.checked }))} />
               </div>
 
@@ -332,13 +331,13 @@ const Medicines = () => {
               </div>
 
               {/* Submit */}
-              <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.5rem' }}>
+              <div style={{ display: 'flex', gap: '0.6rem', marginTop: '0.25rem' }}>
                 <button type="button" onClick={() => { setShowModal(false); setEditMed(null); }}
-                  style={{ flex: 1, padding: '0.875rem', borderRadius: '0.875rem', border: '1.5px solid #e8eaf6', background: 'white', color: '#64748b', fontWeight: 700, cursor: 'pointer' }}>
+                  style={{ flex: 1, padding: '0.65rem', borderRadius: '0.75rem', border: '1.5px solid #e8eaf6', background: 'white', color: '#64748b', fontWeight: 700, fontSize: '0.85rem', cursor: 'pointer' }}>
                   Cancel
                 </button>
-                <button type="submit" disabled={isUploading} className="btn-premium" style={{ flex: 2 }}>
-                  {isUploading ? 'Uploading…' : editMed ? '✅ Update Medicine' : '💊 Save Medicine'}
+                <button type="submit" disabled={isUploading} className="btn-premium" style={{ flex: 2, padding: '0.65rem' }}>
+                  {isUploading ? 'Uploading…' : editMed ? '✅ Update' : '💊 Save'}
                 </button>
               </div>
             </form>

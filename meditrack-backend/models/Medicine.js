@@ -16,6 +16,8 @@ const MedicineSchema = new mongoose.Schema({
     isMonthly: { type: Boolean, default: false },
     currentStock: { type: Number, default: 0 },
     prescriptionImage: { type: String }, // URL to image
+    reminderEmail: { type: String },
+    stockAlertLevel: { type: Number, default: 10 },
     isActive: { type: Boolean, default: true }
 }, { timestamps: true });
 

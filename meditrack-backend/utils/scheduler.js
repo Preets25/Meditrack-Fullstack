@@ -115,6 +115,56 @@ const sendLowStockAlerts = async () => {
     }
 };
 
+/**
+ * Checks for custom time reminders every minute
+ */
+const sendCustomReminders = async () => {
+    try {
+        const now = new Date();
+        const currentTime = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false }); // "14:30" format
+        
+        // Find medicines due at THIS specific minute
+        const dueMeds = await Medicine.find({
+            frequency: currentTime,
+            isActive: true,
+            $or: [
+                { endDate: { $exists: false } },
+                { endDate: null },
+                { endDate: { $gte: now } }
+            ]
+        }).populate('userId', 'name email');
+
+        if (dueMeds.length === 0) return;
+
+        console.log(`[Scheduler] Found ${dueMeds.length} custom reminders for ${currentTime}`);
+
+        for (const med of dueMeds) {
+            const to = med.reminderEmail || med.userId?.email;
+            if (!to) continue;
+
+            await transporter.sendMail({
+                from: `"Meditrack" <${process.env.EMAIL_USER}>`,
+                to,
+                subject: `💊 Reminder: Time for ${med.name}`,
+                html: `
+                    <div style="font-family: sans-serif; max-width: 500px; margin: auto; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px;">
+                        <h2 style="color: #4f46e5; margin-bottom: 16px;">Medication Reminder</h2>
+                        <p>Hello ${med.userId?.name || 'there'}, it's time to take your medicine:</p>
+                        <div style="background: #f8fafc; padding: 16px; border-radius: 8px; margin: 16px 0;">
+                            <p style="margin: 0; font-size: 18px; font-weight: bold; color: #1e293b;">${med.name}</p>
+                            <p style="margin: 4px 0 0 0; color: #64748b;">Dosage: ${med.dosage}</p>
+                            <p style="margin: 4px 0 0 0; color: #64748b;">Scheduled: ${currentTime}</p>
+                        </div>
+                        <p style="font-size: 14px; color: #94a3b8;">Don't forget to mark it as taken in your dashboard!</p>
+                    </div>
+                `
+            });
+        }
+    } catch (err) {
+        console.error(`[Scheduler] Custom reminder error:`, err.message);
+    }
+};
+
 const initScheduler = () => {
     console.log('✅ Medicine Scheduler Initialized');
 
@@ -132,6 +182,9 @@ const initScheduler = () => {
 
     // 10:00 AM - Daily Low Stock Scan
     cron.schedule('0 10 * * *', sendLowStockAlerts);
+
+    // Every Minute - Custom Reminder Scan
+    cron.schedule('* * * * *', sendCustomReminders);
     
     // For manual testing: Run every hour at minute 05 to see output if needed
     // cron.schedule('5 * * * *', () => console.log('[Scheduler] Alive and checking...'));
