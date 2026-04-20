@@ -163,7 +163,7 @@ const Layout = () => {
 
         {/* ── Mobile bottom tab bar ──────────────────────── */}
         <nav className="md:hidden fixed bottom-0 left-0 right-0 z-30"
-          style={{ background: 'rgba(255,255,255,0.97)', backdropFilter: 'blur(24px)', borderTop: '1.5px solid #e8eaf6', paddingBottom: 'env(safe-area-inset-bottom)' }}>
+          style={{ background: 'transparent', paddingBottom: 'env(safe-area-inset-bottom)' }}>
           <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center', padding: '0.375rem 0.5rem 0.25rem' }}>
             {[
               { path: dashboardPath, icon: LayoutDashboard, label: 'Home' },
