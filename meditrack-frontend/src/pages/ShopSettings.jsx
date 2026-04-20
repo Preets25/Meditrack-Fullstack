@@ -35,7 +35,6 @@ const SPECIALIZATIONS = [
 const TABS = [
   { id: 'profile', label: 'Shop Profile', icon: Store },
   { id: 'hours',   label: 'Hours & Location', icon: Clock },
-  { id: 'doctors', label: 'Doctor Schedule', icon: Stethoscope },
 ];
 
 const EMPTY_DOCTOR = { doctorName: '', specialization: 'General Physician', days: [], availableDates: '', timings: '' };
@@ -56,9 +55,6 @@ const ShopSettings = () => {
     address: '', city: '', state: '', pincode: '',
     operatingHours: '09:00 - 21:00', openOn: 'Mon–Sat', latitude: '', longitude: ''
   });
-  const [doctors, setDoctors] = useState([]);
-  const [newDoctor, setNewDoctor] = useState({ ...EMPTY_DOCTOR });
-  const [addingDoctor, setAddingDoctor] = useState(false);
 
   // ── fetch my shop ──
   useEffect(() => {
@@ -85,7 +81,6 @@ const ShopSettings = () => {
             latitude: shop.latitude ?? '',
             longitude: shop.longitude ?? ''
           });
-          setDoctors(shop.doctorSchedule || []);
           setHasShop(true);
         } else {
           setHasShop(false);
@@ -114,11 +109,6 @@ const ShopSettings = () => {
       ...location,
       latitude: location.latitude !== '' ? Number(location.latitude) : undefined,
       longitude: location.longitude !== '' ? Number(location.longitude) : undefined,
-      doctorSchedule: doctors.map(doc => {
-        // Remove temporary frontend IDs (numeric strings) so Mongoose can generate real ones
-        const { _id, ...rest } = doc;
-        return _id && /^[0-9a-fA-F]{24}$/.test(_id) ? { _id, ...rest } : rest;
-      })
     };
     try {
       if (hasShop && shopId) {
@@ -135,7 +125,6 @@ const ShopSettings = () => {
         if (created) { 
           setShopId(created._id); 
           setHasShop(true); 
-          setDoctors(created.doctorSchedule || []);
           showToast('Shop registered and account upgraded! ✨');
           // Reload only once to firmly apply the new Role across the app
           setTimeout(() => { window.location.reload(); }, 1500);
@@ -201,15 +190,6 @@ const ShopSettings = () => {
     }
   };
 
-  const addDoctor = () => {
-    if (!newDoctor.doctorName || newDoctor.days.length === 0) return;
-    setDoctors(prev => [...prev, { ...newDoctor, _id: Date.now().toString() }]);
-    setNewDoctor({ ...EMPTY_DOCTOR });
-    setAddingDoctor(false);
-    showToast('Doctor schedule added (save to persist)');
-  };
-
-  const removeDoctor = (idx) => setDoctors(prev => prev.filter((_, i) => i !== idx));
 
   if (loading) {
     return (
@@ -475,120 +455,6 @@ const ShopSettings = () => {
             </div>
           )}
 
-          {/* ── Doctors Tab ── */}
-          {tab === 'doctors' && (
-            <div className="ss-card">
-              <div className="ss-card-header">
-                <Stethoscope size={20} />
-                <h2>Doctor Schedules</h2>
-                <button
-                  type="button"
-                  className="ss-btn-primary ss-ml-auto"
-                  onClick={() => setAddingDoctor(true)}
-                >
-                  <Plus size={16} /> Add Doctor
-                </button>
-              </div>
-
-              {/* Add doctor form */}
-              {addingDoctor && (
-                <div className="ss-doctor-form">
-                  <div className="ss-form-grid">
-                    <div className="ss-field">
-                      <label>Doctor Name *</label>
-                      <div className="ss-input-icon">
-                        <User size={15} />
-                        <input
-                          value={newDoctor.doctorName}
-                          onChange={e => setNewDoctor(d => ({ ...d, doctorName: e.target.value }))}
-                          placeholder="Dr. Ramesh Kumar"
-                        />
-                      </div>
-                    </div>
-                    <div className="ss-field">
-                      <label>Specialization</label>
-                      <select value={newDoctor.specialization} onChange={e => setNewDoctor(d => ({ ...d, specialization: e.target.value }))}>
-                        {SPECIALIZATIONS.map(s => <option key={s}>{s}</option>)}
-                      </select>
-                    </div>
-                    <div className="ss-field">
-                      <label>Timings</label>
-                      <div className="ss-input-icon">
-                        <Clock size={15} />
-                        <input
-                          value={newDoctor.timings}
-                          onChange={e => setNewDoctor(d => ({ ...d, timings: e.target.value }))}
-                          placeholder="10:00 AM - 01:00 PM"
-                        />
-                      </div>
-                    </div>
-                    <div className="ss-field">
-                      <label>Visiting Dates (Optional)</label>
-                      <div className="ss-input-icon">
-                        <Plus size={15} />
-                        <input
-                          value={newDoctor.availableDates}
-                          onChange={e => setNewDoctor(d => ({ ...d, availableDates: e.target.value }))}
-                          placeholder="e.g. Oct 12th - 15th"
-                        />
-                      </div>
-                    </div>
-                    <div className="ss-field ss-col-2">
-                      <label>Available Days *</label>
-                      <div className="ss-days">
-                        {DAYS.map(day => (
-                          <button
-                            type="button" key={day}
-                            onClick={() => toggleDay(day)}
-                            className={`ss-day-btn ${newDoctor.days.includes(day) ? 'ss-day-active' : ''}`}
-                          >
-                            {day.slice(0, 3)}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="ss-doctor-actions">
-                    <button type="button" className="ss-btn-ghost" onClick={() => setAddingDoctor(false)}>Cancel</button>
-                    <button type="button" className="ss-btn-primary" onClick={addDoctor}>
-                      <Plus size={16} /> Add to Schedule
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              {/* Doctors list */}
-              {doctors.length === 0 && !addingDoctor ? (
-                <div className="ss-empty">
-                  <Stethoscope size={36} className="text-slate-300 mx-auto mb-3" />
-                  <p className="font-semibold text-slate-600">No doctors scheduled</p>
-                  <p className="text-sm text-slate-400">Add visiting doctors to inform patients about availability.</p>
-                </div>
-              ) : (
-                <div className="ss-doctors-list">
-                  {doctors.map((doc, idx) => (
-                    <div key={doc._id || idx} className="ss-doctor-card">
-                      <div className="ss-doctor-avatar">
-                        <Stethoscope size={20} />
-                      </div>
-                      <div className="ss-doctor-info">
-                        <p className="ss-doctor-name">{doc.doctorName}</p>
-                        <p className="ss-doctor-spec">{doc.specialization}</p>
-                        <div className="ss-doctor-meta">
-                          <span className="ss-doctor-days">{(doc.days || []).map(d => d.slice(0,3)).join(', ')}</span>
-                          {doc.availableDates && <span className="ss-doctor-dates"><Plus size={12}/> {doc.availableDates}</span>}
-                          {doc.timings && <span className="ss-doctor-time"><Clock size={12}/> {doc.timings}</span>}
-                        </div>
-                      </div>
-                      <button type="button" onClick={() => removeDoctor(idx)} className="ss-del-btn">
-                        <Trash2 size={16} />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
 
           {/* Save button (bottom / mobile) */}
           <div className="ss-save-bottom">

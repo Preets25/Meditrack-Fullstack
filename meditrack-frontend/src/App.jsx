@@ -18,6 +18,7 @@ import Profile from './pages/Profile';
 import Inventory from './pages/Inventory';
 import ShopSettings from './pages/ShopSettings';
 import Orders from './pages/Orders';
+import DoctorSchedule from './pages/DoctorSchedule';
 import Layout from './components/Layout';
 
 function App() {
@@ -47,6 +48,7 @@ function App() {
               <Route path="shops/:id" element={<ShopDetail />} />
               <Route path="profile" element={<Profile />} />
               <Route path="orders" element={<Orders />} />
+              <Route path="doctor-schedule" element={<DoctorSchedule />} />
 
               <Route element={<ProtectedRoute allowedRoles={['shop_owner', 'admin']} />}>
                 <Route path="inventory" element={<Inventory />} />

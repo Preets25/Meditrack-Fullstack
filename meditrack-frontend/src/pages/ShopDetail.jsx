@@ -68,7 +68,7 @@ const ShopDetail = () => {
     );
   }
 
-  const { shop, reviews, doctors } = data;
+  const { shop, reviews } = data;
 
   return (
     <div className="p-6 md:p-8 bg-slate-50 min-h-screen">
@@ -123,84 +123,7 @@ const ShopDetail = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 space-y-8">
-          {/* Reviews Section */}
-          <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 md:p-8">
-            <h2 className="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
-              <MessageSquare className="text-blue-500" /> Customer Reviews
-            </h2>
-            
-            {reviews?.length === 0 ? (
-              <p className="text-slate-500 text-center py-6 bg-slate-50 rounded-xl border border-dashed">No reviews yet. Be the first!</p>
-            ) : (
-              <div className="space-y-4">
-                 {reviews?.map((rev, index) => (
-                    <div key={index} className="p-4 bg-slate-50 rounded-xl border border-slate-100">
-                      <div className="flex justify-between items-center mb-2">
-                         <span className="font-semibold text-slate-800">{rev.userName || 'Anonymous'}</span>
-                         <span className="flex items-center text-amber-500 text-sm font-bold">
-                           <Star size={14} fill="currentColor" className="mr-1"/> {rev.rating}/5
-                         </span>
-                      </div>
-                      <p className="text-slate-600 text-sm">{rev.comment}</p>
-                    </div>
-                 ))}
-              </div>
-            )}
-
-            {/* Write Review */}
-            <form onSubmit={handleReviewSubmit} className="mt-8 border-t border-slate-100 pt-6">
-              <h3 className="font-bold text-slate-800 mb-4 flex items-center gap-2">
-                <PlusCircle size={18} className="text-slate-400"/> Write a Review
-              </h3>
-              <div className="mb-4">
-                 <label className="block text-sm font-medium text-slate-700 mb-1">Rating</label>
-                 <select 
-                   value={rating} 
-                   onChange={(e) => setRating(Number(e.target.value))}
-                   className="w-full p-2 border rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
-                 >
-                   {[5,4,3,2,1].map(num => <option key={num} value={num}>{num} Stars</option>)}
-                 </select>
-              </div>
-              <div className="mb-4">
-                 <label className="block text-sm font-medium text-slate-700 mb-1">Comment</label>
-                 <textarea 
-                   required
-                   value={comment}
-                   onChange={e => setComment(e.target.value)}
-                   className="w-full p-3 border rounded-lg outline-none focus:ring-2 focus:ring-blue-500 h-24"
-                   placeholder="Share your experience..."
-                 />
-              </div>
-              <button type="submit" className="px-6 py-2 bg-slate-900 text-white rounded-lg font-medium hover:bg-slate-800 transition">
-                Submit Review
-              </button>
             </form>
-          </div>
-        </div>
-
-        <div>
-          {/* Doctor Schedule Section */}
-          <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
-            <h2 className="text-xl font-bold text-slate-900 mb-6">Visiting Doctors</h2>
-            
-            {!doctors || doctors.length === 0 ? (
-              <p className="text-slate-500 text-sm text-center py-4 bg-slate-50 rounded-xl">No scheduling data available.</p>
-            ) : (
-              <div className="space-y-4">
-                 {doctors.map((doc, idx) => (
-                    <div key={idx} className="p-4 border border-indigo-100 bg-indigo-50/30 rounded-xl">
-                      <h4 className="font-bold text-indigo-900">{doc.doctorName}</h4>
-                      <p className="text-indigo-600 text-sm mb-3">{doc.specialization}</p>
-                      <div className="bg-white p-3 rounded-lg border border-indigo-50 text-sm">
-                         <div className="font-medium text-slate-700">{doc.days.join(', ')}</div>
-                         <div className="text-slate-500">{doc.timings}</div>
-                      </div>
-                    </div>
-                 ))}
-              </div>
-            )}
           </div>
         </div>
       </div>
