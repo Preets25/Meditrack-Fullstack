@@ -1,0 +1,38 @@
+{
+  "name": "Meditrack Pro",
+  "short_name": "Meditrack",
+  "description": "Your personal health and pharmacy management app",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f4f6ff",
+  "theme_color": "#4f46e5",
+  "orientation": "portrait",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["health", "medical", "lifestyle"],
+  "shortcuts": [
+    {
+      "name": "My Medicines",
+      "url": "/medicines",
+      "description": "View and manage your medicines"
+    },
+    {
+      "name": "My Orders",
+      "url": "/orders",
+      "description": "Track your pharmacy orders"
+    }
+  ]
+}

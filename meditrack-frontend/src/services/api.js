@@ -98,9 +98,17 @@ api.interceptors.response.use(
       } else if (url.includes('/shops') && method === 'get') {
         const inventoryMatch = String(url).match(/\/shops\/([^/]+)\/inventory/);
         const detailMatch    = String(url).match(/\/shops\/([^/?#]+)\/?(?:\?.*)?$/);
+        const searchMatch    = String(url).match(/\/shops\/search/);
 
         if (inventoryMatch) {
           mockData = { success: true, data: MOCK_INVENTORY };
+        } else if (searchMatch) {
+          const params = new URLSearchParams(error.config?.url.split('?')[1]);
+          const q = (params.get('q') || '').toLowerCase();
+          const results = MOCK_INVENTORY
+            .filter(item => item.name.toLowerCase().includes(q) && item.isAvailable)
+            .map(item => ({ ...item, shopId: MOCK_SHOPS[0] }));
+          mockData = { success: true, results };
         } else if (detailMatch && detailMatch[1] !== 'my') {
           const found = MOCK_SHOPS.find(s => String(s._id) === detailMatch[1]);
           mockData = { success: true, data: { shop: found || null, reviews: [], doctors: [], inventory: MOCK_INVENTORY.slice(0, 4) } };
@@ -127,6 +135,22 @@ api.interceptors.response.use(
 
       } else if (url.includes('/shops') && method === 'delete') {
         mockData = { success: true, message: 'Deleted' };
+
+      // ──── ORDERS ────────────────────────────────────────────────────
+      } else if (url.includes('/orders/my')) {
+        mockData = { success: true, orders: [
+          { _id: 'o1', medicineName: 'Paracetamol 500mg', quantity: 2, status: 'Pending', createdAt: new Date().toISOString(), shopId: MOCK_SHOPS[0] }
+        ]};
+      } else if (url.includes('/orders/shop')) {
+        mockData = { success: true, orders: [
+          { _id: 'o2', medicineName: 'Amoxicillin 500mg', quantity: 1, status: 'Accepted', createdAt: new Date().toISOString(), patientId: { name: 'John Doe', phone: '1234567890' } }
+        ]};
+      } else if (url.includes('/orders') && method === 'post') {
+        const body = JSON.parse(error.config?.data || '{}');
+        mockData = { success: true, order: { _id: Date.now().toString(), ...body, status: 'Pending', createdAt: new Date().toISOString() } };
+      } else if (url.includes('/orders') && method === 'put') {
+        const body = JSON.parse(error.config?.data || '{}');
+        mockData = { success: true, order: { _id: url.split('/').pop(), ...body } };
       }
 
       console.warn(`Providing mock data for ${method} ${url}`);

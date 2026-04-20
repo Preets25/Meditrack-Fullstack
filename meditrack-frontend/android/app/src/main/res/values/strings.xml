@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Meditrack Pro</string>
+    <string name="title_activity_main">Meditrack Pro</string>
+    <string name="package_name">com.meditrack.pro</string>
+    <string name="custom_url_scheme">com.meditrack.pro</string>
+</resources>

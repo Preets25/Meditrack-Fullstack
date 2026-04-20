@@ -18,6 +18,29 @@ router.get('/', async (req, res) => {
 });
 
 // ─────────────────────────────────────────────────────────────────
+// 1.5 GLOBAL INVENTORY SEARCH
+// ─────────────────────────────────────────────────────────────────
+router.get('/search', protect, async (req, res) => {
+    try {
+        const { q } = req.query;
+        if (!q) return res.json({ success: true, results: [] });
+
+        // Find available inventory items matching the query
+        const items = await Inventory.find({
+            name: { $regex: q, $options: 'i' },
+            isAvailable: true
+        }).populate('shopId', 'name address city phone rating type');
+
+        // Filter out any items where the shop was deleted or missing
+        const results = items.filter(item => item.shopId);
+
+        res.json({ success: true, results });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+
+// ─────────────────────────────────────────────────────────────────
 // 2. GET MY SHOP (for logged-in shop owner)
 // ─────────────────────────────────────────────────────────────────
 router.get('/my', protect, authorize('shop_owner', 'admin'), async (req, res) => {

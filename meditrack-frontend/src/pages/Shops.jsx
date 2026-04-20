@@ -11,14 +11,14 @@ const isOpen = (hoursStr) => {
   const currentHour = new Date().getHours();
   const match = hoursStr.match(/(\d{1,2}):(\d{2})\s*[-–]\s*(\d{1,2}):(\d{2})/);
   if (!match) return currentHour >= 8 && currentHour < 22;
-  const openH  = parseInt(match[1]);
+  const openH = parseInt(match[1]);
   const closeH = parseInt(match[3]);
   return currentHour >= openH && currentHour < closeH;
 };
 
 const StarRating = ({ rating }) => (
   <div className="shops-stars">
-    {[1,2,3,4,5].map(s => (
+    {[1, 2, 3, 4, 5].map(s => (
       <span key={s} style={{ color: s <= Math.round(rating) ? '#f59e0b' : '#e2e8f0', fontSize: '14px' }}>★</span>
     ))}
     <span className="shops-rating-num">{Number(rating).toFixed(1)}</span>

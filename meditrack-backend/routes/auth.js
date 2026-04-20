@@ -6,20 +6,14 @@ const { redisClient, transporter, isRedisReady } = require('../utils/services');
 
 // 1. ADD THIS LINE: Import the protect middleware
 const { protect } = require('../Middleware/Auth'); 
-const rateLimit = require('express-rate-limit');
 const { body, validationResult } = require('express-validator');
 
-// Rate limiter for login
-const loginLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 5, // Limit each IP to 5 login requests per windowMs
-    message: { success: false, message: 'Too many login attempts, please try again after 15 minutes' }
-});
 
 // @desc    Register a user
 // @route   POST /api/auth/register
 router.post('/register', [
     body('name').notEmpty().withMessage('Name is required'),
+    body('username').notEmpty().withMessage('Username is required').isLength({ min: 3 }).withMessage('Username must be at least 3 characters'),
     body('email').isEmail().withMessage('Valid email is required'),
     body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
     body('role').optional().isIn(['patient', 'shop_owner']).withMessage('Invalid role')
@@ -28,9 +22,15 @@ router.post('/register', [
     if (!errors.isEmpty()) return res.status(400).json({ success: false, errors: errors.array() });
 
     try {
-        const { name, email, password, role: bodyRole } = req.body;
+        const { name, username, email, password, role: bodyRole } = req.body;
         const role = bodyRole || 'patient';
-        const user = await User.create({ name, email, password, role });
+        const user = await User.create({
+            name,
+            username: username?.trim().toLowerCase(),
+            email: email.trim().toLowerCase(),
+            password,
+            role
+        });
         const token = jwt.sign(
             { id: user._id, role: user.role },
             process.env.JWT_SECRET,
@@ -43,7 +43,8 @@ router.post('/register', [
         });
     } catch (err) {
         if (err.code === 11000) {
-            return res.status(400).json({ success: false, message: 'Email already exists' });
+            const field = Object.keys(err.keyValue)[0];
+            return res.status(400).json({ success: false, message: `${field.charAt(0).toUpperCase() + field.slice(1)} already exists` });
         }
         next(err);
     }
@@ -51,16 +52,24 @@ router.post('/register', [
 
 // @desc    Login user
 // @route   POST /api/auth/login
-router.post('/login', loginLimiter, [
-    body('email').isEmail().withMessage('Valid email is required'),
+router.post('/login', [
+    body('identifier').notEmpty().withMessage('Email or Username is required'),
     body('password').exists().withMessage('Password is required')
 ], async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) return res.status(400).json({ success: false, errors: errors.array() });
 
     try {
-        const { email, password } = req.body;
-        const user = await User.findOne({ email });
+        const { identifier, password } = req.body;
+        const identifierLower = identifier.trim().toLowerCase();
+        const isEmail = identifierLower.includes('@');
+
+        // Build query: always try email match; also try username if not obviously an email
+        const query = isEmail
+            ? { email: identifierLower }
+            : { $or: [{ email: identifierLower }, { username: identifierLower }] };
+
+        const user = await User.findOne(query).select('+password');
 
         if (!user || !(await user.matchPassword(password))) {
             return res.status(401).json({ success: false, message: "Invalid credentials" });

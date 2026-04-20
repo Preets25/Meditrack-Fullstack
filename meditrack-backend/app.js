@@ -7,6 +7,7 @@ const medicineRoutes = require('./routes/medicines');
 const shopRoutes = require('./routes/shops');
 const adminRoutes = require('./routes/admin');
 const doseRoutes = require('./routes/doses');
+const orderRoutes = require('./routes/order');
 
 const app = express();
 
@@ -23,6 +24,8 @@ app.use('/api/medicines', medicineRoutes);
 app.use('/api/shops', shopRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/doses', doseRoutes);
+app.use('/api/orders', orderRoutes);
+app.use('/api/upload', require('./routes/upload'));
 
 // 3. Health Check Route
 app.get('/', (req, res) => {

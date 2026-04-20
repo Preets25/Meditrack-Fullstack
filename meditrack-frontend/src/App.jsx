@@ -7,6 +7,7 @@ import DashboardRedirect from './components/DashboardRedirect';
 
 import Dashboard from './pages/Dashboard';
 import ShopOwnerDashboard from './pages/ShopOwnerDashboard';
+import AdminDashboard from './pages/AdminDashboard';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import ForgotPassword from './pages/ForgotPassword';
@@ -16,6 +17,7 @@ import ShopDetail from './pages/ShopDetail';
 import Profile from './pages/Profile';
 import Inventory from './pages/Inventory';
 import ShopSettings from './pages/ShopSettings';
+import Orders from './pages/Orders';
 import Layout from './components/Layout';
 
 function App() {
@@ -33,14 +35,18 @@ function App() {
               <Route element={<RoleRoute allow={['patient', 'admin']} redirectTo="/dashboard/shop" />}>
                 <Route path="dashboard/patient" element={<Dashboard />} />
               </Route>
-              <Route element={<RoleRoute allow={['shop_owner', 'admin']} redirectTo="/dashboard/patient" />}>
+              <Route element={<RoleRoute allow={['shop_owner']} redirectTo="/dashboard/patient" />}>
                 <Route path="dashboard/shop" element={<ShopOwnerDashboard />} />
+              </Route>
+              <Route element={<RoleRoute allow={['admin']} redirectTo="/dashboard/patient" />}>
+                <Route path="dashboard/admin" element={<AdminDashboard />} />
               </Route>
 
               <Route path="medicines" element={<Medicines />} />
               <Route path="shops" element={<Shops />} />
               <Route path="shops/:id" element={<ShopDetail />} />
               <Route path="profile" element={<Profile />} />
+              <Route path="orders" element={<Orders />} />
 
               <Route element={<ProtectedRoute allowedRoles={['shop_owner', 'admin']} />}>
                 <Route path="inventory" element={<Inventory />} />
