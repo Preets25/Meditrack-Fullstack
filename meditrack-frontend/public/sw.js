@@ -34,13 +34,29 @@ self.addEventListener('fetch', (event) => {
   event.respondWith(
     fetch(request)
       .then((response) => {
-        // Cache fresh copy of successful responses
-        if (response && response.status === 200) {
+        // Cache fresh copy of successful GET responses
+        if (request.method === 'GET' && response && response.status === 200) {
           const clone = response.clone();
           caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
         }
         return response;
       })
-      .catch(() => caches.match(request)) // Fallback to cache if offline
+      .catch(async () => {
+        const cachedResponse = await caches.match(request);
+        if (cachedResponse) return cachedResponse;
+
+        // Fallback for navigation requests (SPA support)
+        if (request.mode === 'navigate') {
+          const home = await caches.match('/');
+          if (home) return home;
+        }
+
+        // Final fallback: return a 408 Network Error response instead of crashing
+        return new Response('Network error or resource not cached', {
+          status: 408,
+          statusText: 'Network Error',
+          headers: { 'Content-Type': 'text/plain' }
+        });
+      })
   );
 });

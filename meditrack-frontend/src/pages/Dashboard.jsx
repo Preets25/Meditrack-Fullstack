@@ -331,9 +331,9 @@ const Dashboard = () => {
         {/* Chart */}
         <div style={{ background: 'white', borderRadius: '1.5rem', padding: '1.5rem 1.75rem', border: '1.5px solid #e8eaf6', boxShadow: '0 2px 12px rgba(79,70,229,0.05)' }}>
           <h2 style={{ fontFamily: 'Outfit,sans-serif', fontSize: '1.125rem', fontWeight: 800, color: '#0f172a', marginBottom: '1rem' }}>7-Day Adherence</h2>
-          <div style={{ height: 220 }}>
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={chartData} barGap={4}>
+          <div style={{ height: 220, minHeight: 220, width: '100%', position: 'relative' }}>
+            <ResponsiveContainer width="100%" height="100%" minHeight={220}>
+              <BarChart data={chartData} barGap={4} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                 <XAxis dataKey="day" tick={{ fontSize: 12, fontFamily: 'Inter', fill: '#94a3b8' }} axisLine={false} tickLine={false} />
                 <YAxis tick={{ fontSize: 12, fontFamily: 'Inter', fill: '#94a3b8' }} axisLine={false} tickLine={false} />

@@ -3,6 +3,21 @@ const router = express.Router();
 const Order = require('../models/Order');
 const Shop = require('../models/Shop');
 const { protect } = require('../Middleware/Auth');
+const mongoose = require('mongoose');
+
+// ── Shared: Get all orders (Admin or debugging only) ────────────────
+router.get('/', protect, async (req, res) => {
+    try {
+        const filter = req.user.role === 'admin' ? {} : { patientId: req.user.id };
+        const orders = await Order.find(filter).populate('shopId', 'name').sort({ createdAt: -1 });
+        res.json({ success: true, orders });
+    } catch (err) {
+        if (err.name === 'ValidationError') {
+            return res.status(400).json({ success: false, message: err.message });
+        }
+        res.status(500).json({ success: false, message: err.message });
+    }
+});
 
 // ── Patient: Create order ─────────────────────────────────────────
 router.post('/', protect, async (req, res) => {
@@ -28,6 +43,9 @@ router.post('/', protect, async (req, res) => {
         const populated = await order.populate('shopId', 'name address phone');
         res.status(201).json({ success: true, order: populated });
     } catch (err) {
+        if (err.name === 'ValidationError') {
+            return res.status(400).json({ success: false, message: err.message });
+        }
         res.status(500).json({ success: false, message: err.message });
     }
 });
@@ -41,6 +59,9 @@ router.get('/my', protect, async (req, res) => {
             .sort({ createdAt: -1 });
         res.json({ success: true, orders });
     } catch (err) {
+        if (err.name === 'ValidationError') {
+            return res.status(400).json({ success: false, message: err.message });
+        }
         res.status(500).json({ success: false, message: err.message });
     }
 });
@@ -58,6 +79,9 @@ router.put('/:id/cancel', protect, async (req, res) => {
         await order.save();
         res.json({ success: true, order });
     } catch (err) {
+        if (err.name === 'ValidationError') {
+            return res.status(400).json({ success: false, message: err.message });
+        }
         res.status(500).json({ success: false, message: err.message });
     }
 });
@@ -76,6 +100,9 @@ router.get('/shop', protect, async (req, res) => {
             
         res.json({ success: true, orders });
     } catch (err) {
+        if (err.name === 'ValidationError') {
+            return res.status(400).json({ success: false, message: err.message });
+        }
         res.status(500).json({ success: false, message: err.message });
     }
 });
@@ -113,6 +140,9 @@ router.put('/:id', protect, async (req, res) => {
         await order.save();
         res.json({ success: true, order });
     } catch (err) {
+        if (err.name === 'ValidationError') {
+            return res.status(400).json({ success: false, message: err.message });
+        }
         res.status(500).json({ success: false, message: err.message });
     }
 });

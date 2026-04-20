@@ -123,17 +123,11 @@ const Medicines = () => {
     toast.success('Medicine removed.');
   };
 
-  const handleRequestRefill = async (med) => {
-    try {
-      await api.post('/orders', {
-        medicineName: med.name,
-        quantity: 1,
-        shopId: undefined,
-      });
-      toast.success(`Refill requested for ${med.name}! 🛒`);
-    } catch {
-      toast.error('Failed to request refill. Please use My Orders page to select a shop.');
-    }
+  const handleRequestRefill = (med) => {
+    toast.error(`Please select a pharmacy for ${med.name} on the 'Shops' or 'My Orders' page first.`, {
+      icon: '🛒',
+      duration: 4000
+    });
   };
 
   const sendStockAlert = async (med) => {
